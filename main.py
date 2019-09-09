@@ -33,11 +33,11 @@ class CheckableFormFiller(tgalice.dialog_manager.form_filling.FormFillingDialogM
         return response
 
 
-dm = CheckableFormFiller('form.yaml', default_message=DEFAULT_MESSAGE)
+dm = CheckableFormFiller('/function/code/form.yaml', default_message=DEFAULT_MESSAGE)
 connector = tgalice.dialog_connector.DialogConnector(dialog_manager=dm)
 
 
-def alice_handler(alice_request):
+def alice_handler(alice_request, context):
     return connector.respond(alice_request, source=tgalice.SOURCES.ALICE)
 
 

@@ -7,10 +7,11 @@ dirs:
 	mkdir -p dist/
 
 dependencies: dirs
-	pip3 install -r requirements.txt --target dist/
+	pip3 install -r requirements.txt --target dist/ --system
 
 install-code: dirs
 	cp main.py dist/main.py
+	cp form.yaml dist/form.yaml
 
 package: dirs install-code
 	rm -f dist.zip
