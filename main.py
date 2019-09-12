@@ -10,7 +10,7 @@ from tgalice.storage.session_storage import BaseStorage
 from botocore.exceptions import ClientError
 
 
-DEFAULT_MESSAGE = 'Привет! Вы в приватном навыке "Дурацкий гороскоп". ' \
+DEFAULT_MESSAGE = 'Привет! Вы в приватном навыке "Айтишный гороскоп". ' \
                   'Скажите "Старт", чтобы узнать, что сулят вам звёзды. ' \
                   'Скажите "Алиса, хватит", чтобы покинуть навык.'
 
