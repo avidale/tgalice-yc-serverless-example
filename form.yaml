@@ -1,44 +1,41 @@
-form_name: 'math_test_form'
+form_name: 'horoscope_form'
 
 start:
-  regexp: 'start'
+  regexp: 'старт|нач(ать|н)'
   # message: Okay, let's start the test! I will ask 3 difficult math questions. Say anything to start.
   suggests:
-    - Start!
-    - Exit the test
-
-finish:
-  message: Okay, thank you for filling the form. We'll tell you the results later.
+    - Старт
+    - Закончить эту астрологию
 
 fields:
   - name: 'name'
-    question: Please tell me your name
+    question: Пожалуйста, назовите своё имя.
   - name: 'year'
-    question: Now tell me the year of your birth. Four digits, nothing more.
+    question: Теперь скажите мне год вашего рождения. Только четыре цифры, ничего лишнего.
     validate_regexp: '^[0-9]{4}$'
-    validate_message: Please try again. Your answer should be 4 digits.
+    validate_message: Пожалуйста, попробуйте ещё раз. Назовите год вашего рождения - четыре цифры.
   - name: 'month'
-    question: Wonderful! Now choose the month of your birth (the first 3 letters).
+    question: Замечательно! Теперь назовите месяц вашего рождения.
     options:
-      - jan
-      - feb
-      - mar
-      - apr
-      - may
-      - jun
-      - jul
-      - aug
-      - sep
-      - oct
-      - nov
-      - dec
-    validate_message: The answer should be one of the suggested options - the first 3 letters of a month.
+      - январь
+      - февраль
+      - март
+      - апрель
+      - май
+      - июнь
+      - июль
+      - август
+      - сентябрь
+      - октябрь
+      - ноябрь
+      - декабрь
+    validate_message: То, что вы назвали, не похоже на месяц. Пожалуйста, назовите месяц вашего рождения, без других слов.
   - name: 'day'
-    question: That's great! Finally, tell me the date of your birth - one or two digits
+    question: Отлично! Наконец, назовите мне дату вашего рождения - только число, всего одна или две цифры.
     validate_regexp: '[0123]?\d$'
-    validate_message: Please try again. Your answer should be a whole number - the day of your birth.
+    validate_message: Пожалуйста, попробуйте ещё раз. Вам нужно назвать число своего рождения (например, двадцатое); это одна или две цифры.
 
 exit:
-  suggest: 'Exit the test'
-  regexp: '(exit|quit)( the)? test'
-  message: You have chosen to quit the game. If you want to take it again, say "start the test"
+  suggest: 'Закончить эту астрологию'
+  regexp: 'Закончить эту астрологию'
+  message: 'Вы отказались от получения гороскопа. Чтобы начать заново, скажите "Старт".'
