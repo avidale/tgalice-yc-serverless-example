@@ -1,3 +1,4 @@
 flask
 mongomock
 tgalice
+boto3
