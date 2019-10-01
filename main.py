@@ -1,16 +1,10 @@
-import logging
+import boto3
 import os
 import random
 import tgalice
 
-import boto3
-import codecs
-import json
-from tgalice.storage.session_storage import BaseStorage
-from botocore.exceptions import ClientError
 
-
-DEFAULT_MESSAGE = 'Привет! Вы в приватном навыке "Айтишный гороскоп". ' \
+DEFAULT_MESSAGE = 'Привет! Вы находитесь в навыке "Айтишный гороскоп". ' \
                   'Скажите "Старт", чтобы узнать, что сулят вам звёзды. ' \
                   'Скажите "Алиса, хватит", чтобы покинуть навык.'
 
@@ -19,34 +13,8 @@ FORECASTS = [
     'возможно, пришло время избавиться от сотен непрочитанных сообщений. Чистый инбокс - к чистоте в карме!',
     'на этой неделе вам надо обязательно побывать в Парке Горького. '
     'Вероятно, вы встретите там человека, который изменит вашу жизнь.',
-    'кажется, в вашей жизни близится время перемен. Может быть, это будет переход на Яндекс.Облако?',
+    'кажется, в вашей жизни близится время перемен. Может быть, это будет переход на Яндекс Облако?',
 ]
-
-
-class S3BasedStorage(BaseStorage):
-    def __init__(self, s3_client, bucket_name, prefix=''):
-        super(BaseStorage, self).__init__()
-        self.s3_client = s3_client
-        self.bucket_name = bucket_name
-        self.prefix = prefix
-
-    def modify_key(self, key):
-        return self.prefix + key
-
-    def get(self, key):
-        try:
-            result = self.s3_client.get_object(Bucket=self.bucket_name, Key=self.modify_key(key))
-            body = result['Body']
-            reader = codecs.getreader("utf-8")
-            return json.load(reader(body))
-        except ClientError as e:
-            if e.response['Error']['Code'] == 'NoSuchKey':
-                return {}
-            else:
-                raise e
-
-    def set(self, key, value):
-        self.s3_client.put_object(Bucket=self.bucket_name, Key=self.modify_key(key), Body=json.dumps(value))
 
 
 class CheckableFormFiller(tgalice.dialog_manager.form_filling.FormFillingDialogManager):
@@ -79,12 +47,22 @@ class CheckableFormFiller(tgalice.dialog_manager.form_filling.FormFillingDialogM
         return response
 
 
+def make_dialog_manager(source_filename):
+    dm = tgalice.dialog_manager.CascadeDialogManager(
+        tgalice.dialog_manager.GreetAndHelpDialogManager(
+            greeting_message=DEFAULT_MESSAGE,
+            help_message=DEFAULT_MESSAGE,
+            exit_message='До свидания, приходите в навык "Айтишный гороскоп" ещё!'
+        ),
+        CheckableFormFiller(source_filename, default_message=DEFAULT_MESSAGE)
+    )
+    return dm
+
+
 if __name__ == '__main__':
     # local run or server-ful deploy
-    logging.basicConfig(level=logging.INFO)
-
-    dm = CheckableFormFiller('form.yaml', default_message=DEFAULT_MESSAGE)
-    connector = tgalice.dialog_connector.DialogConnector(dialog_manager=dm)  # by default, store state in RAM
+    # by default, store state in RAM
+    connector = tgalice.dialog_connector.DialogConnector(dialog_manager=make_dialog_manager('form.yaml'))
     server = tgalice.flask_server.FlaskServer(connector=connector)
     server.parse_args_and_run()
 else:
@@ -98,11 +76,9 @@ else:
         region_name='ru-central1',
     )
 
-    storage = S3BasedStorage(s3_client=s3, bucket_name='tgalice-test-state-storage')
+    storage = tgalice.session_storage.S3BasedStorage(s3_client=s3, bucket_name='tgalice-test-cold-storage')
 
-    dm = CheckableFormFiller('/function/code/form.yaml', default_message=DEFAULT_MESSAGE)
+    dm = make_dialog_manager('/function/code/form.yaml')
     connector = tgalice.dialog_connector.DialogConnector(dialog_manager=dm, storage=storage)
 
-    def alice_handler(alice_request, context):
-        return connector.respond(alice_request, source=tgalice.SOURCES.ALICE)
-
+    alice_handler = connector.serverless_alice_handler

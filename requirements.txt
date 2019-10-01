@@ -1,4 +1,4 @@
 flask
 mongomock
-tgalice==0.2.0
+tgalice==0.2.3
 boto3
