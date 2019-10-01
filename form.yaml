@@ -2,10 +2,8 @@ form_name: 'horoscope_form'
 
 start:
   regexp: 'старт|нач(ать|н)'
-  # message: Okay, let's start the test! I will ask 3 difficult math questions. Say anything to start.
   suggests:
     - Старт
-    - Закончить эту астрологию
 
 fields:
   - name: 'name'
