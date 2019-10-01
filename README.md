@@ -42,8 +42,8 @@ yc serverless function version create\
     --execution-timeout=3s
 ```
 После того, как функция запущена, протестировать работу навыка можно подобно тому, как описано в 
-[официальном примере](https://cloud.yandex.ru/docs/serverless-functions/solutions/alice-skill):
-дописать к урлу функции `?integration=raw` и использовать это в качестве вебхука.
+[официальном примере](https://cloud.yandex.ru/docs/serverless-functions/solutions/alice-skill): сделать функцию публичной и выбрать её из выпадающего списка в консоли разработчика диалогов.
+
 
 Этот пример написан по мотивам [примера от Глеба](https://github.com/monsterzz/yc-serverless-python-deps) 
 (Глеб, спасибо тебе за работу в ночи!). Любые комментарии и правки принимаются.
