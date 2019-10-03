@@ -4,7 +4,7 @@
 Этот репозиторий показывает, как можно разработать простенький stateful навык для Алисы 
 на основе [serverless functions](https://cloud.yandex.ru/docs/serverless-functions/) (далее SF) 
 из Яндекс.Облака и питонячьей библиотеки [tgalice](https://github.com/avidale/tgalice). 
-В качестве "начинки" навыка у нас будет шуточный гороскоп - заодно покажем, как на `tgalice` можно делать
+В качестве "начинки" навыка у нас будет [шуточный гороскоп](https://dialogs.yandex.ru/store/skills/bfdd6cd4-ajtishnyj-gorosko) - заодно покажем, как на `tgalice` можно делать
 простенький form-filling.
 
 Почему всё устроено так, как устроено:
